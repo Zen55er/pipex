@@ -2,24 +2,23 @@ NAME = 			pipex
 LIBFT_DIR =		../libft_new
 LIBFT =			../libft_new/libft.a
 SRC =			pipex.c
+SRC_OBJS =		$(SRC:.c=.o)
 CC =			@cc
-CFLAGS =		-Wall -Werror -Wextra -g
+CFLAGS =		-Wall -Wextra -Werror -g
 
-all: ($NAME)
+all:	$(NAME)
 
-$(NAME): 
-		@$(MAKE) --no-print-directory -C $(LIBFT_DIR)
-		@(CC) -o $@ $(LIBFT) -fsanitize=address
-
-%.o: 	%.c
-		@(CC) -c -o $@ $< $(CFLAGS)
+$(NAME):	$(SRC_OBJS)
+			@$(MAKE) --no-print-directory -C $(LIBFT_DIR)
+			@(CC) $(CFLAGS) -o $(@) $(LIBFT) -fsanitize=address
 
 clean:
-		@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
+			@rm -f $(SRC_OBJS)
+			@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
 
 fclean:	clean
-		@$(MAKE) --no-print-directory -C $(LIBFT_DIR) fclean
+			@$(MAKE) --no-print-directory -C $(LIBFT_DIR) fclean
 
 re:		fclean all
 
-.PHONY: all cleam fclean re
+.PHONY: all clean fclean re
