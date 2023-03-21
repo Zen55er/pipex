@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/21 11:36:58 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/21 13:23:17 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,31 @@ int	outfile_test(char *path)
 	return (0);
 }
 
+char	**get_path(char **envp)
+{
+	char	**paths;
+	int		i;
+
+	i = -1;
+	while (envp[++i])
+	{
+		if (strncmp(envp[i], "PATH", 4))
+		{
+			paths = ft_split(envp[i], ":");
+			break ;
+		}
+	}
+	return (paths);
+}
+
+build_path_cmds???
+
 void	child(int *pipefd, int infilefd, char *cmd1)
 {
 	dup2(infilefd, 0);
 	dup2(pipefd[1], 1);
 	close(pipefd[0]);
+	execve()
 }
 
 int	main(int ac, char **av, char **envp)
@@ -58,12 +78,15 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	infilefd = open(av[1], O_RDONLY);
 	outfilefd = open(av[4], O_RDWR);
-	paths = get_path()
+	paths = get_path(envp);
 	pipe(pipefd);
 	proc1 = fork;
 	if (!proc1)
 		child(&pipefd, infilefd, av[2]);
 	else
 		parent(&pipefd, outfilefd, av[3]);
+	close (pipefd[0]);
+	close (pipefd[1]);
+	free (paths);
 	return (0);
 }
