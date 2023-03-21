@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 10:53:30 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/20 13:27:08 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/21 09:32:07 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,6 @@
 
 /*pipex.c*/
 int	infile_test(char *path);
+int	outfile_test(char *path);
 
 #endif
