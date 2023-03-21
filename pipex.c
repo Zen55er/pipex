@@ -6,12 +6,13 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/21 09:31:52 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/21 11:36:58 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+/*Tests if infile can be accessed and read from*/
 int	infile_test(char *path)
 {
 	if (access(path, F_OK))
@@ -21,6 +22,7 @@ int	infile_test(char *path)
 	return (0);
 }
 
+/*Tests if outfile can be accessed and has read/write permissions*/
 int	outfile_test(char *path)
 {
 	if (access(path, F_OK))
@@ -32,13 +34,36 @@ int	outfile_test(char *path)
 	return (0);
 }
 
-int	main(int ac, char **av)
+void	child(int *pipefd, int infilefd, char *cmd1)
 {
+	dup2(infilefd, 0);
+	dup2(pipefd[1], 1);
+	close(pipefd[0]);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	int		pipefd[2];
+	int		proc1;
+	int		proc2;
+	int		infilefd;
+	int		outfilefd;
+	char	**paths;
+
 	if (ac != 5)
-		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile\n"));
+		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile.\n"));
 	if (infile_test(av[1]))
 		return (1);
 	if (outfile_test(av[4]))
 		return (1);
-	return (ac);
+	infilefd = open(av[1], O_RDONLY);
+	outfilefd = open(av[4], O_RDWR);
+	paths = get_path()
+	pipe(pipefd);
+	proc1 = fork;
+	if (!proc1)
+		child(&pipefd, infilefd, av[2]);
+	else
+		parent(&pipefd, outfilefd, av[3]);
+	return (0);
 }
