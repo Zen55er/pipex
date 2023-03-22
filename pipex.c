@@ -36,31 +36,38 @@ char	**get_path(char **envp)
 	return (paths);
 }
 
-char	**get_cmds(char **paths, char *cmd1, char *cmd2)
+void	check_args(t_cmds **cmds, char *cmd1, char *cmd2)
 {
-	char	**cmds;
+	(*cmds)->cmd1 = 0;
+	(*cmds)->cmd2 = 0;
+	(*cmds)->cmd1_args = ft_split(cmd1, " ");
+	(*cmds)->cmd2_args = ft_split(cmd2, " ");
+	return ;
+}
+
+t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2)
+{
+	t_cmds	*cmds;
 	char	*test1;
 	char	*test2;
 	int		i;
 
-	cmds = (char **)malloc(sizeof(char *) * 3);
-	cmds[0] = 0;
-	cmds[1] = 0;
-	cmds[2] = 0;
+	cmds = (t_cmds *)malloc(sizeof(t_cmds));
+	check_args(&cmds, cmd1, cmd2);
 	i = -1;
 	while (paths[++i])
 	{
-		test1 = ft_strjoin(paths[i], cmd1);
-		test2 = ft_strjoin(paths[i], cmd2);
-		if (!access(test1, F_OK) && !cmds[0])
-			cmds[0] = test1;
+		test1 = ft_strjoin(paths[i], cmds->cmd1_args[0]);
+		test2 = ft_strjoin(paths[i], cmds->cmd2_args[0]);
+		if (!access(test1, F_OK) && !cmds->cmd1)
+			cmds->cmd1 = test1;
 		else
 			free(test1);
-		if (!access(test2, F_OK) && !cmds[1])
-			cmds[1] = test2;
+		if (!access(test2, F_OK) && !cmds->cmd2)
+			cmds->cmd2 = test2;
 		else
 			free(test2);
-		if (cmds[0] && cmds[1])
+		if (cmds->cmd1 && cmds->cmd2)
 			break ;
 	}
 	return (cmds);
@@ -74,7 +81,7 @@ int	main(int ac, char **av, char **envp)
 	int		infilefd;
 	int		outfilefd; */
 	char	**paths;
-	char	**cmds;
+	t_cmds	*cmds;
 
 	if (ac != 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile.\n"));

@@ -17,8 +17,18 @@
 # include <string.h>
 # include <sys/wait.h>
 
+typedef struct s_cmds
+{
+	char	*cmd1;
+	char	**cmd1_args;
+	char	*cmd2;
+	char	**cmd2_args;
+}			t_cmds;
+
 /*pipex.c*/
 char	**get_path(char **envp);
+void	check_args(t_cmds **cmds, char *cmd1, char *cmd2);
+t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2)
 
 /*pipex_utils*/
 int		big_free(char **doublep);
