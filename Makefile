@@ -1,7 +1,7 @@
 NAME =			pipex
 LIBFT_DIR =		../libft_new
 LIBFT =			../libft_new/libft.a
-SRC =			pipex.c
+SRC =			pipex.c pipex_utils.c
 CC = 			@cc
 CFLAGS = 		-Wall -Wextra -Werror -g
 
