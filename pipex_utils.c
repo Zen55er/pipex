@@ -6,25 +6,21 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/22 12:01:09 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/22 16:22:52 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 /*Frees everything*/
-int	big_free(t_paths *paths)
+int	big_free(char **paths)
 {
 	int	i;
 
 	i = -1;
-	while (paths->paths_cmd1[++i])
-	{
-		free (paths->paths_cmd1[i]);
-		free (paths->paths_cmd2[i]);
-	}
-	free (paths->paths_cmd1);
-	free (paths->paths_cmd2);
+	while (paths[++i])
+		free (paths[i]);
+	free (paths);
 	return (0);
 }
 
@@ -42,7 +38,7 @@ int	infile_test(char *path)
 int	outfile_test(char *path)
 {
 	if (access(path, F_OK))
-		return (ft_printf("Outfile can't be accessed.\n"));
+		return (ft_printf("Outfile couldn't be accessed. File was created\n"));
 	if (access(path, R_OK))
 		return (ft_printf("Outfile can't be read.\n"));
 	if (access(path, W_OK))
@@ -50,10 +46,10 @@ int	outfile_test(char *path)
 	return (0);
 }
 
-void	child(int *pipefd, int infilefd, char *cmd1)
+/* void	child(int *pipefd, int infilefd, char *cmd1)
 {
 	dup2(infilefd, 0);
 	dup2(pipefd[1], 1);
 	close(pipefd[0]);
 	execve()
-}
+} */
