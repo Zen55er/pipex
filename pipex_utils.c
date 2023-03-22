@@ -6,21 +6,21 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/22 16:22:52 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:18:49 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 /*Frees everything*/
-int	big_free(char **paths)
+int	big_free(char **doublep)
 {
 	int	i;
 
 	i = -1;
-	while (paths[++i])
-		free (paths[i]);
-	free (paths);
+		while (doublep[++i])
+			free (doublep[i]);
+		free (doublep);
 	return (0);
 }
 

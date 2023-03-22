@@ -36,6 +36,36 @@ char	**get_path(char **envp)
 	return (paths);
 }
 
+char	**get_cmds(char **paths, char *cmd1, char *cmd2)
+{
+	char	**cmds;
+	char	*test1;
+	char	*test2;
+	int		i;
+
+	cmds = (char **)malloc(sizeof(char *) * 3);
+	cmds[0] = 0;
+	cmds[1] = 0;
+	cmds[2] = 0;
+	i = -1;
+	while (paths[++i])
+	{
+		test1 = ft_strjoin(paths[i], cmd1);
+		test2 = ft_strjoin(paths[i], cmd2);
+		if (!access(test1, F_OK) && !cmds[0])
+			cmds[0] = test1;
+		else
+			free(test1);
+		if (!access(test2, F_OK) && !cmds[1])
+			cmds[1] = test2;
+		else
+			free(test2);
+		if (cmds[0] && cmds[1])
+			break ;
+	}
+	return (cmds);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	/* int		pipefd[2];
@@ -44,6 +74,7 @@ int	main(int ac, char **av, char **envp)
 	int		infilefd;
 	int		outfilefd; */
 	char	**paths;
+	char	**cmds;
 
 	if (ac != 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile.\n"));
@@ -54,8 +85,10 @@ int	main(int ac, char **av, char **envp)
 	/* infilefd = open(av[1], O_RDONLY);
 	outfilefd = open(av[4], O_RDWR); */
 	paths = get_path(envp);
-	for (int i = 0; paths[i]; i++)
-		ft_printf("Path pos %i: %s\n", i, paths[i]);
+	cmds = get_cmds(paths, av[2], av[3]);
+	big_free(paths);
+	for (int i = 0; cmds[i]; i++)
+		ft_printf("Cmds pos %i: %s\n", i, cmds[i]);
 	/* pipe(pipefd);
 	proc1 = fork;
 	if (!proc1)
@@ -64,6 +97,6 @@ int	main(int ac, char **av, char **envp)
 		parent(&pipefd, outfilefd, av[3]);
 	close (pipefd[0]);
 	close (pipefd[1]); */
-	big_free(paths);
+	big_free(cmds);
 	return (0);
 }

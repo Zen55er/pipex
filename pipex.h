@@ -21,7 +21,7 @@
 char	**get_path(char **envp);
 
 /*pipex_utils*/
-int		big_free(char **paths);
+int		big_free(char **doublep);
 int		infile_test(char *path);
 int		outfile_test(char *path);
 void	child(int *pipefd, int infilefd, char *cmd1);
