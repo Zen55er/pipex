@@ -28,10 +28,10 @@ typedef struct s_cmds
 /*pipex.c*/
 char	**get_path(char **envp);
 void	check_args(t_cmds **cmds, char *cmd1, char *cmd2);
-t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2)
+t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2);
 
 /*pipex_utils*/
-int		big_free(char **doublep);
+int		big_free(char **paths, t_cmds **cmds);
 int		infile_test(char *path);
 int		outfile_test(char *path);
 void	child(int *pipefd, int infilefd, char *cmd1);

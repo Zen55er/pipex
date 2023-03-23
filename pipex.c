@@ -40,8 +40,8 @@ void	check_args(t_cmds **cmds, char *cmd1, char *cmd2)
 {
 	(*cmds)->cmd1 = 0;
 	(*cmds)->cmd2 = 0;
-	(*cmds)->cmd1_args = ft_split(cmd1, " ");
-	(*cmds)->cmd2_args = ft_split(cmd2, " ");
+	(*cmds)->cmd1_args = ft_split(cmd1, ' ');
+	(*cmds)->cmd2_args = ft_split(cmd2, ' ');
 	return ;
 }
 
@@ -93,9 +93,9 @@ int	main(int ac, char **av, char **envp)
 	outfilefd = open(av[4], O_RDWR); */
 	paths = get_path(envp);
 	cmds = get_cmds(paths, av[2], av[3]);
-	big_free(paths);
-	for (int i = 0; cmds[i]; i++)
-		ft_printf("Cmds pos %i: %s\n", i, cmds[i]);
+	big_free(paths, 0);
+	ft_printf("Cmd1: %s\n", cmds->cmd1);
+	ft_printf("Cmd2: %s\n", cmds->cmd2);
 	/* pipe(pipefd);
 	proc1 = fork;
 	if (!proc1)
@@ -104,6 +104,6 @@ int	main(int ac, char **av, char **envp)
 		parent(&pipefd, outfilefd, av[3]);
 	close (pipefd[0]);
 	close (pipefd[1]); */
-	big_free(cmds);
+	big_free(0, &cmds);
 	return (0);
 }

@@ -6,21 +6,38 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/22 17:18:49 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/23 11:55:24 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 /*Frees everything*/
-int	big_free(char **doublep)
+int	big_free(char **paths, t_cmds **cmds)
 {
 	int	i;
 
-	i = -1;
-		while (doublep[++i])
-			free (doublep[i]);
-		free (doublep);
+	if (paths)
+	{
+		i = -1;
+		while (paths[++i])
+			free (paths[i]);
+		free (paths);
+	}
+	if (cmds)
+	{
+		i = -1;
+		while ((*cmds)->cmd1_args[++i])
+			free ((*cmds)->cmd1_args[i]);
+		i = -1;
+		while ((*cmds)->cmd2_args[++i])
+			free ((*cmds)->cmd2_args[i]);
+		free ((*cmds)->cmd1_args);
+		free ((*cmds)->cmd2_args);
+		free ((*cmds)->cmd1);
+		free ((*cmds)->cmd2);
+		free((*cmds));
+	}
 	return (0);
 }
 
