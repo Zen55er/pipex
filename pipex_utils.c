@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/23 11:55:24 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/24 11:33:50 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,18 @@ int	outfile_test(char *path)
 	if (access(path, W_OK))
 		return (ft_printf("Outfile can't be written.\n"));
 	return (0);
+}
+
+void	new_process(int *pipefd[2], t_cmds *cmds)
+{
+	int	new_fork;
+
+	new_fork = fork();
+	if (new_fork < 0)
+		perror("Error when forking process");
+	else if (new_fork == 1)
+		child(pipefd, cmds);
+	return ;
 }
 
 /* void	child(int *pipefd, int infilefd, char *cmd1)
