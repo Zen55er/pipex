@@ -34,6 +34,10 @@ t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2);
 int		big_free(char **paths, t_cmds **cmds);
 int		infile_test(char *path);
 int		outfile_test(char *path);
-void	child(int *pipefd, int infilefd, char *cmd1);
+void	new_process(int *pipefd[2], t_cmds *cmds, int infilefd, char **env);
+void	child(int *pipefd, int infilefd, t_cmds *cmds, char **env);
+
+/*pipex_utils2*/
+void	plug_pipe(int pipefd[2]);
 
 #endif

@@ -75,8 +75,8 @@ t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2)
 
 int	main(int ac, char **av, char **envp)
 {
-	/* int		pipefd[2];
-	int		proc1;
+	int		pipefd[2];
+	/*int		proc1;
 	int		proc2;
 	int		infilefd;
 	int		outfilefd; */
@@ -89,21 +89,22 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	if (outfile_test(av[4]))
 		return (1);
-	/* infilefd = open(av[1], O_RDONLY);
-	outfilefd = open(av[4], O_RDWR); */
+	infilefd = open(av[1], O_RDONLY);
+	outfilefd = open(av[4], O_RDWR);
 	paths = get_path(envp);
 	cmds = get_cmds(paths, av[2], av[3]);
 	big_free(paths, 0);
-	ft_printf("Cmd1: %s\n", cmds->cmd1);
-	ft_printf("Cmd2: %s\n", cmds->cmd2);
-	/* pipe(pipefd);
-	proc1 = fork;
-	if (!proc1)
-		child(&pipefd, infilefd, av[2]);
-	else
-		parent(&pipefd, outfilefd, av[3]);
-	close (pipefd[0]);
-	close (pipefd[1]); */
+	/* ft_printf("Cmd1: %s\n", cmds->cmd1);
+	ft_printf("Cmd2: %s\n", cmds->cmd2); */
+	if (pipe(pipefd) == -1)
+	{
+		big_free(0, &cmds);
+		return (ft_printf("Pipe failed\n"));
+	}
+	new_process(pipefd, cmds, infilefd, env);
+	plug_pipe{pipefd};
+	close(infilefd);
+	close(outfilefd);
 	big_free(0, &cmds);
 	return (0);
 }
