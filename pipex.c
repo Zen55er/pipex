@@ -101,6 +101,7 @@ int	main(int ac, char **av, char **envp)
 		big_free(0, &cmds);
 		return (ft_printf("Pipe failed\n"));
 	}
+	/*REWRITE TO ITERATE EACH COMMAND AND SWAP CMD LOGIC TO HOLD ONLY ONE THAT IS RETRIEVED/CHANGED IN NEW_PROCESS*/
 	new_process(pipefd, cmds, infilefd, env);
 	plug_pipe{pipefd};
 	close(infilefd);
