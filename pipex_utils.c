@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gacorrei <gacorrei@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/25 11:00:58 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/27 09:36:43 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,10 @@ int	big_free(char **paths, t_cmds **cmds)
 	if (cmds)
 	{
 		i = -1;
-		while ((*cmds)->cmd1_args[++i])
-			free ((*cmds)->cmd1_args[i]);
-		i = -1;
-		while ((*cmds)->cmd2_args[++i])
-			free ((*cmds)->cmd2_args[i]);
-		free ((*cmds)->cmd1_args);
-		free ((*cmds)->cmd2_args);
-		free ((*cmds)->cmd1);
-		free ((*cmds)->cmd2);
+		while ((*cmds)->cmd_args[++i])
+			free ((*cmds)->cmd_args[i]);
+		free ((*cmds)->cmd_args);
+		free ((*cmds)->cmd);
 		free((*cmds));
 	}
 	return (0);
@@ -63,7 +58,7 @@ int	outfile_test(char *path)
 	return (0);
 }
 
-void	new_process(int *pipefd[2], t_cmds *cmds, int infilefd, char **env)
+/* void	new_process(int *pipefd[2], t_cmds *cmds, int infilefd, char **envp)
 {
 	int	new_fork;
 
@@ -71,15 +66,15 @@ void	new_process(int *pipefd[2], t_cmds *cmds, int infilefd, char **env)
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(pipefd, infilefd, cmds);
+		child(pipefd, infilefd, cmds, envp);
 	return ;
-}
+} */
 
-void	child(int *pipefd, int infilefd, t_cmds *cmds, char **env)
+/* void	child(int *pipefd, int infilefd, t_cmds *cmds, char **envp)
 {
 	dup2(infilefd, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
 	plug_pipe(pipefd);
-	execve(cmds->cmd1, cmds->cmd1_args, env);
-	ft_printf("execve failed.\n")
-}
+	execve(cmds->cmd1, cmds->cmd1_args, envp);
+	ft_printf("execve failed.\n");
+} */

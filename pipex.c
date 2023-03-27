@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/21 13:23:17 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/27 09:48:21 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,38 +36,24 @@ char	**get_path(char **envp)
 	return (paths);
 }
 
-void	check_args(t_cmds **cmds, char *cmd1, char *cmd2)
-{
-	(*cmds)->cmd1 = 0;
-	(*cmds)->cmd2 = 0;
-	(*cmds)->cmd1_args = ft_split(cmd1, ' ');
-	(*cmds)->cmd2_args = ft_split(cmd2, ' ');
-	return ;
-}
-
-t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2)
+t_cmds	*get_cmd(char **paths, char *cmd)
 {
 	t_cmds	*cmds;
-	char	*test1;
-	char	*test2;
+	char	*test;
 	int		i;
 
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
-	check_args(&cmds, cmd1, cmd2);
+	cmds->cmd = 0;
+	cmds->cmd_args = ft_split(cmd, ' ');
 	i = -1;
 	while (paths[++i])
 	{
-		test1 = ft_strjoin(paths[i], cmds->cmd1_args[0]);
-		test2 = ft_strjoin(paths[i], cmds->cmd2_args[0]);
-		if (!access(test1, F_OK) && !cmds->cmd1)
-			cmds->cmd1 = test1;
+		test = ft_strjoin(paths[i], cmds->cmd_args[0]);
+		if (!access(test, F_OK) && !cmds->cmd)
+			cmds->cmd = test;
 		else
-			free(test1);
-		if (!access(test2, F_OK) && !cmds->cmd2)
-			cmds->cmd2 = test2;
-		else
-			free(test2);
-		if (cmds->cmd1 && cmds->cmd2)
+			free(test);
+		if (cmds->cmd)
 			break ;
 	}
 	return (cmds);
@@ -75,7 +61,7 @@ t_cmds	*get_cmds(char **paths, char *cmd1, char *cmd2)
 
 int	main(int ac, char **av, char **envp)
 {
-	int		pipefd[2];
+	//int		pipefd[2];
 	/*int		proc1;
 	int		proc2;
 	int		infilefd;
@@ -85,27 +71,22 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac != 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile.\n"));
-	if (infile_test(av[1]))
+	/* if (infile_test(av[1]))
 		return (1);
 	if (outfile_test(av[4]))
-		return (1);
-	infilefd = open(av[1], O_RDONLY);
-	outfilefd = open(av[4], O_RDWR);
+		return (1); */
+	/* infilefd = open(av[1], O_RDONLY);
+	outfilefd = open(av[4], O_RDWR); */
 	paths = get_path(envp);
-	cmds = get_cmds(paths, av[2], av[3]);
-	big_free(paths, 0);
-	/* ft_printf("Cmd1: %s\n", cmds->cmd1);
-	ft_printf("Cmd2: %s\n", cmds->cmd2); */
-	if (pipe(pipefd) == -1)
+	/* if (pipe(pipefd) == -1)
 	{
-		big_free(0, &cmds);
+		big_free(paths, &cmds);
 		return (ft_printf("Pipe failed\n"));
 	}
-	/*REWRITE TO ITERATE EACH COMMAND AND SWAP CMD LOGIC TO HOLD ONLY ONE THAT IS RETRIEVED/CHANGED IN NEW_PROCESS*/
-	new_process(pipefd, cmds, infilefd, env);
-	plug_pipe{pipefd};
+	new_process(pipefd, cmds, infilefd, envp);
+	plug_pipe(pipefd);
 	close(infilefd);
-	close(outfilefd);
-	big_free(0, &cmds);
+	close(outfilefd); */
+	big_free(paths, &cmds);
 	return (0);
 }
