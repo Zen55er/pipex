@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/27 11:31:02 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/27 14:30:38 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,46 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds fds)
 
 	cmds = get_cmd(paths, cmd);
 	if (pipe(pipefd) == -1)
-		return (ft_printf("Pipe failed\n"));
+	{
+		ft_printf("Pipe failed\n");
+		return ;
+	}
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(&cmds, pipefd, envp);
+		child(&cmds, pipefd, envp, fds);
 	return ;
 }
 
-void	child(t_cmds **cmds, int *pipefd, char **envp)
+void	child(t_cmds **cmds, int *pipefd, char **envp, t_fds fds)
 {
-	dup2(infilefd, STDIN_FILENO);
-	dup2(pipefd[1], STDOUT_FILENO);
+	int	fd_in;
+	int	fd_out;
+
+	if (fds.in_fd && !fds.out_fd)
+		fd_in = fds.in_fd;
+	else
+		fd_in = pipefd[0];
+	if (!fds.in_fd && fds.out_fd)
+		fd_out = fds.out_fd;
+	else
+		fd_out = pipefd[1];
+	if (dup2(fd_in, STDIN_FILENO) < 0 || dup2(fd_out, STDOUT_FILENO) < 0)
+	{
+		big_free(0, cmds);
+		return ;
+	}
+	/* if (fds.in_fd && !fds.out_fd)
+		dup2(fds.in_fd, STDIN_FILENO);
+	else
+		dup2(pipefd[0], STDIN_FILENO);
+	if (!fds.in_fd && fds.out_fd)
+		dup2(fds.out_fd, STDOUT_FILENO);
+	else
+		dup2(pipefd[1], STDOUT_FILENO); */
 	plug_pipe(pipefd);
-	execve(cmds->cmd, cmds->cmd_args, envp);
+	execve((*cmds)->cmd, (*cmds)->cmd_args, envp);
 	ft_printf("execve failed.\n");
 	return ;
 }

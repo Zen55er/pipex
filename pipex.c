@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/27 11:36:37 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/27 13:03:32 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int	main(int ac, char **av, char **envp)
 			new_process(av[i + 2], paths, envp, (t_fds){0, fds.out_fd});
 		else
 			new_process(av[i + 2], paths, envp, (t_fds){0, 0});
-			
 	}
 	close(fds.in_fd);
 	close(fds.out_fd);
