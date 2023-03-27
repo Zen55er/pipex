@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/27 09:36:43 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/27 11:31:02 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,29 @@ int	outfile_test(char *path)
 	return (0);
 }
 
-/* void	new_process(int *pipefd[2], t_cmds *cmds, int infilefd, char **envp)
+void	new_process(char *cmd, char **paths, char **envp, t_fds fds)
 {
-	int	new_fork;
+	int		pipefd[2];
+	int		new_fork;
+	t_cmds	*cmds;
 
+	cmds = get_cmd(paths, cmd);
+	if (pipe(pipefd) == -1)
+		return (ft_printf("Pipe failed\n"));
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(pipefd, infilefd, cmds, envp);
+		child(&cmds, pipefd, envp);
 	return ;
-} */
+}
 
-/* void	child(int *pipefd, int infilefd, t_cmds *cmds, char **envp)
+void	child(t_cmds **cmds, int *pipefd, char **envp)
 {
 	dup2(infilefd, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
 	plug_pipe(pipefd);
-	execve(cmds->cmd1, cmds->cmd1_args, envp);
+	execve(cmds->cmd, cmds->cmd_args, envp);
 	ft_printf("execve failed.\n");
-} */
+	return ;
+}

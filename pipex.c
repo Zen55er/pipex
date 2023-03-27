@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/27 09:48:21 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/27 11:36:37 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	**get_path(char **envp)
 	return (paths);
 }
 
+/*Fixes path to have the command at the end and splits args if there are any*/
 t_cmds	*get_cmd(char **paths, char *cmd)
 {
 	t_cmds	*cmds;
@@ -61,32 +62,32 @@ t_cmds	*get_cmd(char **paths, char *cmd)
 
 int	main(int ac, char **av, char **envp)
 {
-	//int		pipefd[2];
-	/*int		proc1;
-	int		proc2;
-	int		infilefd;
-	int		outfilefd; */
+	t_fds	fds;
 	char	**paths;
-	t_cmds	*cmds;
+	int		i;
 
 	if (ac != 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile.\n"));
-	/* if (infile_test(av[1]))
+	if (infile_test(av[1]))
 		return (1);
 	if (outfile_test(av[4]))
-		return (1); */
-	/* infilefd = open(av[1], O_RDONLY);
-	outfilefd = open(av[4], O_RDWR); */
+		return (2);
+	fds.in_fd = open(av[1], O_RDONLY);
+	fds.out_fd = open(av[4], O_RDWR);
 	paths = get_path(envp);
-	/* if (pipe(pipefd) == -1)
+	i = -1;
+	while (++i < ac - 3)
 	{
-		big_free(paths, &cmds);
-		return (ft_printf("Pipe failed\n"));
+		if (i == 0)
+			new_process(av[i + 2], paths, envp, (t_fds){fds.in_fd, 0});
+		else if (i == ac - 2)
+			new_process(av[i + 2], paths, envp, (t_fds){0, fds.out_fd});
+		else
+			new_process(av[i + 2], paths, envp, (t_fds){0, 0});
+			
 	}
-	new_process(pipefd, cmds, infilefd, envp);
-	plug_pipe(pipefd);
-	close(infilefd);
-	close(outfilefd); */
-	big_free(paths, &cmds);
+	close(fds.in_fd);
+	close(fds.out_fd);
+	big_free(paths, 0);
 	return (0);
 }
