@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 09:53:13 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:04:24 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int	main(int ac, char **av, char **envp)
 	if (outfile_test(av[4]))
 		return (2);
 	fds.in_fd = open(av[1], O_RDONLY);
-	fds.out_fd = open(av[4], O_RDWR);
+	fds.out_fd = open(av[4], O_RDWR | O_CREAT | O_TRUNC);
+	fds.flag = 1;
 	if (create_pipes(&fds))
 		return (3);
 	paths = get_path(envp);
@@ -84,8 +85,13 @@ int	main(int ac, char **av, char **envp)
 			new_process_s(av[i + 2], paths, envp, fds);
 		else if (i == ac - 2)
 			new_process_e(av[i + 2], paths, envp, fds);
+		else if ((i + 2) % 2 == 0)
+			new_process(av[i + 2], paths, envp, fds);
 		else
-			new_process(av[i + 2], paths, envp, (t_fds){0, 0});
+		{
+			fds.flag = 2;
+			new_process(av[i + 2], paths, envp, fds);
+		}
 	}
 	close(fds.in_fd);
 	close(fds.out_fd);

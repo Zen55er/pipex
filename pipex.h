@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 10:53:30 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 09:59:14 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 10:54:25 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_fds
 	int		pipefd2[2];
 	int		in;
 	int		out;
+	int		flag;
 }			t_fds;
 
 /*pipex.c*/
@@ -43,8 +44,9 @@ int		infile_test(char *path);
 int		outfile_test(char *path);
 int		create_pipes(t_fds *fds);
 void	new_process_s(char *cmd, char **paths, char **envp, t_fds fds);
+void	new_process_e(char *cmd, char **paths, char **envp, t_fds fds);
 void	new_process(char *cmd, char **paths, char **envp, t_fds fds);
-void	child(t_cmds **cmds, int *pipefd, char **envp, t_fds fds);
+void	child(t_cmds **cmds, char **envp, int in, int out);
 
 /*pipex_utils2*/
 void	plug_pipe(int pipefd[2]);

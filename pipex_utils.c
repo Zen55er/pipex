@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 10:01:18 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:10:42 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,25 @@ void	new_process_s(char *cmd, char **paths, char **envp, t_fds fds)
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(cmds, envp, fds);
+		child(&cmds, envp, fds.in, fds.out);
+}
+
+void	new_process_e(char *cmd, char **paths, char **envp, t_fds fds)
+{
+	int		new_fork;
+	t_cmds	*cmds;
+
+	if (fds.flag == 1)
+		fds.in = fds.pipefd2[0];
+	else
+		fds.in = fds.pipefd1[0];
+	fds.out = fds.out_fd;
+	cmds = get_cmd(paths, cmd);
+	new_fork = fork();
+	if (new_fork < 0)
+		perror("Error when forking process");
+	else if (new_fork == 0)
+		child(&cmds, envp, fds.in, fds.out);
 }
 
 void	new_process(char *cmd, char **paths, char **envp, t_fds fds)
@@ -87,17 +105,26 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds fds)
 	int		new_fork;
 	t_cmds	*cmds;
 
+	if (fds.flag == 1)
+	{
+		fds.in = fds.pipefd2[0];
+		fds.out = fds.pipefd1[1];
+	}
+	else
+	{
+		fds.in = fds.pipefd1[0];
+		fds.out = fds.pipefd2[1];
+	}
 	cmds = get_cmd(paths, cmd);
-	
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(&cmds, pipefd, envp, fds);
+		child(&cmds, envp, fds.in, fds.out);
 	return ;
 }
 
-void	child(t_cmds *cmds, int *pipefd, char **envp, t_fds fds)
+void	child(t_cmds **cmds, char **envp, int in, int out)
 {
 	int	fd_in;
 	int	fd_out;
