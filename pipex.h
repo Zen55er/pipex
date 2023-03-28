@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 10:53:30 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 11:56:12 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 12:52:51 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ typedef struct s_fds
 
 /*pipex.c*/
 char	**get_path(char **envp);
+int		create_pipes(t_fds *fds);
 t_cmds	*get_cmd(char **paths, char *cmd);
 
 /*pipex_utils*/
 int		big_free(char **paths, t_cmds **cmds);
 int		infile_test(char *path);
 int		outfile_test(char *path);
-int		create_pipes(t_fds *fds);
 void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds);
 void	new_process2(char *cmd, char **paths, char **envp, t_fds *fds);
-void	child(t_cmds **cmds, char **envp, int in, int out);
+void	child(t_cmds **cmds, char **envp, t_fds *fds);
 
 /*pipex_utils2*/
 void	plug_pipe(int pipefd[2]);

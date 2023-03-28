@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 11:58:48 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 13:55:02 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,6 @@ int	outfile_test(char *path)
 	return (0);
 }
 
-int	create_pipes(t_fds *fds)
-{
-	if (pipe((*fds).pipefd1) == -1)
-		return (ft_printf("Pipe 1 failed.\n"));
-	if (pipe((*fds).pipefd2) == -1)
-		return (ft_printf("Pipe 2 failed.\n"));
-	return (0);
-}
-
 void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds)
 {
 	int		new_fork;
@@ -78,8 +69,8 @@ void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds)
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(&cmds, envp, (*fds).in, (*fds).out);
-	big_free(0, cmds);
+		child(&cmds, envp, fds);
+	big_free(0, &cmds);
 	return ;
 }
 
@@ -89,27 +80,35 @@ void	new_process2(char *cmd, char **paths, char **envp, t_fds *fds)
 	t_cmds	*cmds;
 
 	if ((*fds).flag == 1)
-		(*fds).in = (*fds).pipefd2[0];
-	else
 		(*fds).in = (*fds).pipefd1[0];
+	else
+		(*fds).in = (*fds).pipefd2[0];
 	(*fds).out = (*fds).out_fd;
 	cmds = get_cmd(paths, cmd);
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(&cmds, envp, (*fds).in, (*fds).out);
-	big_free(0, cmds);
+		child(&cmds, envp, fds);
+	big_free(0, &cmds);
 	return ;
 }
 
-void	child(t_cmds **cmds, char **envp, int in, int out)
+void	child(t_cmds **cmds, char **envp, t_fds *fds)
 {
-	if (dup2(in, STDIN_FILENO) < 0 || dup2(out, STDOUT_FILENO) < 0)
+	if (dup2((*fds).in, STDIN_FILENO) < 0 || dup2((*fds).out, STDOUT_FILENO) < 0)
 	{
 		big_free(0, cmds);
 		return ;
 	}
+	if ((*fds).in == (*fds).pipefd1[0])
+		close ((*fds).pipefd1[1]);
+	else if ((*fds).in == (*fds).pipefd2[0])
+		close ((*fds).pipefd2[1]);
+	if ((*fds).out == (*fds).pipefd1[1])
+		close ((*fds).pipefd1[0]);
+	else if ((*fds).out == (*fds).pipefd2[1])
+		close ((*fds).pipefd2[0]);
 	execve((*cmds)->cmd, (*cmds)->cmd_args, envp);
 	ft_printf("execve failed.\n");
 	return ;
