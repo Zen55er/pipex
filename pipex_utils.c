@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/27 14:30:38 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 10:01:18 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,37 @@ int	outfile_test(char *path)
 	return (0);
 }
 
+int	create_pipes(t_fds *fds)
+{
+	if (pipe((*fds).pipefd1) == -1)
+		return (ft_printf("Pipe 1 failed.\n"));
+	if (pipe((*fds).pipefd2) == -1)
+		return (ft_printf("Pipe 2 failed.\n"));
+	return (0);
+}
+
+void	new_process_s(char *cmd, char **paths, char **envp, t_fds fds)
+{
+	int		new_fork;
+	t_cmds	*cmds;
+
+	fds.in = fds.in_fd;
+	fds.out = fds.pipefd1[1];
+	cmds = get_cmd(paths, cmd);
+	new_fork = fork();
+	if (new_fork < 0)
+		perror("Error when forking process");
+	else if (new_fork == 0)
+		child(cmds, envp, fds);
+}
+
 void	new_process(char *cmd, char **paths, char **envp, t_fds fds)
 {
-	int		pipefd[2];
 	int		new_fork;
 	t_cmds	*cmds;
 
 	cmds = get_cmd(paths, cmd);
-	if (pipe(pipefd) == -1)
-	{
-		ft_printf("Pipe failed\n");
-		return ;
-	}
+	
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
@@ -78,7 +97,7 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds fds)
 	return ;
 }
 
-void	child(t_cmds **cmds, int *pipefd, char **envp, t_fds fds)
+void	child(t_cmds *cmds, int *pipefd, char **envp, t_fds fds)
 {
 	int	fd_in;
 	int	fd_out;

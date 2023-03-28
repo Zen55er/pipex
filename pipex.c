@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/27 13:03:32 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 09:53:13 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,16 @@ int	main(int ac, char **av, char **envp)
 		return (2);
 	fds.in_fd = open(av[1], O_RDONLY);
 	fds.out_fd = open(av[4], O_RDWR);
+	if (create_pipes(&fds))
+		return (3);
 	paths = get_path(envp);
 	i = -1;
 	while (++i < ac - 3)
 	{
 		if (i == 0)
-			new_process(av[i + 2], paths, envp, (t_fds){fds.in_fd, 0});
+			new_process_s(av[i + 2], paths, envp, fds);
 		else if (i == ac - 2)
-			new_process(av[i + 2], paths, envp, (t_fds){0, fds.out_fd});
+			new_process_e(av[i + 2], paths, envp, fds);
 		else
 			new_process(av[i + 2], paths, envp, (t_fds){0, 0});
 	}
