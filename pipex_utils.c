@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 11:10:42 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:22:01 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,22 +67,36 @@ int	create_pipes(t_fds *fds)
 	return (0);
 }
 
-void	new_process_s(char *cmd, char **paths, char **envp, t_fds fds)
+void	new_process1(char *cmd, char **paths, char **envp, t_fds fds)
 {
 	int		new_fork;
 	t_cmds	*cmds;
 
-	fds.in = fds.in_fd;
-	fds.out = fds.pipefd1[1];
+	if (fds.flag == 0)
+	{
+		fds.in = fds.in_fd;
+		fds.out = fds.pipefd1[1];
+	}
+	else if (fds.flag == 1)
+	{
+		fds.in = fds.pipefd2[0];
+		fds.out = fds.pipefd1[1];
+	}
+	else if (fds.flag == 2)
+	{
+		fds.in = fds.pipefd1[0];
+		fds.out = fds.pipefd2[1];
+	}
 	cmds = get_cmd(paths, cmd);
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
 		child(&cmds, envp, fds.in, fds.out);
+	return ;
 }
 
-void	new_process_e(char *cmd, char **paths, char **envp, t_fds fds)
+void	new_process2(char *cmd, char **paths, char **envp, t_fds fds)
 {
 	int		new_fork;
 	t_cmds	*cmds;
@@ -98,30 +112,6 @@ void	new_process_e(char *cmd, char **paths, char **envp, t_fds fds)
 		perror("Error when forking process");
 	else if (new_fork == 0)
 		child(&cmds, envp, fds.in, fds.out);
-}
-
-void	new_process(char *cmd, char **paths, char **envp, t_fds fds)
-{
-	int		new_fork;
-	t_cmds	*cmds;
-
-	if (fds.flag == 1)
-	{
-		fds.in = fds.pipefd2[0];
-		fds.out = fds.pipefd1[1];
-	}
-	else
-	{
-		fds.in = fds.pipefd1[0];
-		fds.out = fds.pipefd2[1];
-	}
-	cmds = get_cmd(paths, cmd);
-	new_fork = fork();
-	if (new_fork < 0)
-		perror("Error when forking process");
-	else if (new_fork == 0)
-		child(&cmds, envp, fds.in, fds.out);
-	return ;
 }
 
 void	child(t_cmds **cmds, char **envp, int in, int out)
