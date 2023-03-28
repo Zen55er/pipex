@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 11:22:01 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:58:48 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,80 +67,49 @@ int	create_pipes(t_fds *fds)
 	return (0);
 }
 
-void	new_process1(char *cmd, char **paths, char **envp, t_fds fds)
+void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds)
 {
 	int		new_fork;
 	t_cmds	*cmds;
 
-	if (fds.flag == 0)
-	{
-		fds.in = fds.in_fd;
-		fds.out = fds.pipefd1[1];
-	}
-	else if (fds.flag == 1)
-	{
-		fds.in = fds.pipefd2[0];
-		fds.out = fds.pipefd1[1];
-	}
-	else if (fds.flag == 2)
-	{
-		fds.in = fds.pipefd1[0];
-		fds.out = fds.pipefd2[1];
-	}
+	get_in_out(fds);
 	cmds = get_cmd(paths, cmd);
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(&cmds, envp, fds.in, fds.out);
+		child(&cmds, envp, (*fds).in, (*fds).out);
+	big_free(0, cmds);
 	return ;
 }
 
-void	new_process2(char *cmd, char **paths, char **envp, t_fds fds)
+void	new_process2(char *cmd, char **paths, char **envp, t_fds *fds)
 {
 	int		new_fork;
 	t_cmds	*cmds;
 
-	if (fds.flag == 1)
-		fds.in = fds.pipefd2[0];
+	if ((*fds).flag == 1)
+		(*fds).in = (*fds).pipefd2[0];
 	else
-		fds.in = fds.pipefd1[0];
-	fds.out = fds.out_fd;
+		(*fds).in = (*fds).pipefd1[0];
+	(*fds).out = (*fds).out_fd;
 	cmds = get_cmd(paths, cmd);
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
 	else if (new_fork == 0)
-		child(&cmds, envp, fds.in, fds.out);
+		child(&cmds, envp, (*fds).in, (*fds).out);
+	big_free(0, cmds);
+	return ;
 }
 
 void	child(t_cmds **cmds, char **envp, int in, int out)
 {
-	int	fd_in;
-	int	fd_out;
-
-	if (fds.in_fd && !fds.out_fd)
-		fd_in = fds.in_fd;
-	else
-		fd_in = pipefd[0];
-	if (!fds.in_fd && fds.out_fd)
-		fd_out = fds.out_fd;
-	else
-		fd_out = pipefd[1];
-	if (dup2(fd_in, STDIN_FILENO) < 0 || dup2(fd_out, STDOUT_FILENO) < 0)
+	if (dup2(in, STDIN_FILENO) < 0 || dup2(out, STDOUT_FILENO) < 0)
 	{
 		big_free(0, cmds);
 		return ;
 	}
-	/* if (fds.in_fd && !fds.out_fd)
-		dup2(fds.in_fd, STDIN_FILENO);
-	else
-		dup2(pipefd[0], STDIN_FILENO);
-	if (!fds.in_fd && fds.out_fd)
-		dup2(fds.out_fd, STDOUT_FILENO);
-	else
-		dup2(pipefd[1], STDOUT_FILENO); */
-	plug_pipe(pipefd);
 	execve((*cmds)->cmd, (*cmds)->cmd_args, envp);
 	ft_printf("execve failed.\n");
 	return ;
