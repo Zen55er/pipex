@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 11:34:43 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 12:59:10 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,42 +70,6 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 		child(cmd, paths, envp, fds);
 	return ;
 }
-
-/* void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds)
-{
-	int		new_fork;
-	t_cmds	*cmds;
-
-	get_in_out(fds);
-	cmds = get_cmd(paths, cmd);
-	new_fork = fork();
-	if (new_fork < 0)
-		perror("Error when forking process");
-	else if (new_fork == 0)
-		child(&cmds, envp, fds);
-	big_free(0, &cmds);
-	return ;
-}
-
-void	new_process2(char *cmd, char **paths, char **envp, t_fds *fds)
-{
-	int		new_fork;
-	t_cmds	*cmds;
-
-	if ((*fds).flag == 1)
-		(*fds).in = (*fds).pipefd1[0];
-	else
-		(*fds).in = (*fds).pipefd2[0];
-	(*fds).out = (*fds).out_fd;
-	cmds = get_cmd(paths, cmd);
-	new_fork = fork();
-	if (new_fork < 0)
-		perror("Error when forking process");
-	else if (new_fork == 0)
-		child(&cmds, envp, fds);
-	big_free(0, &cmds);
-	return ;
-} */
 
 void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 {

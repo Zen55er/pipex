@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 10:53:30 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 11:32:39 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 13:05:44 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ int		big_free(char **paths, t_cmds **cmds);
 int		infile_test(char *path);
 int		outfile_test(char *path);
 void	new_process(char *cmd, char **paths, char **envp, t_fds *fds);
-/* void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds);
-void	new_process2(char *cmd, char **paths, char **envp, t_fds *fds); */
 void	child(char *cmd, char **paths, char **envp, t_fds *fds);
 
 /*pipex_utils2*/
+int		create_pipes(t_fds *fds);
 void	plug_pipe(int pipefd[2]);
+void	get_flag(int i, int ac, t_fds *fds);
 void	get_in_out(t_fds *fds);
 
 #endif
