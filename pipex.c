@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 13:49:43 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 11:35:14 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,21 @@ int	main(int ac, char **av, char **envp)
 	i = -1;
 	while (++i < ac - 3)
 	{
-		if (i == ac - 2)
+		if (i == 0)
+			fds.flag = 0;
+		else if (i + 2 == ac - 2 && i % 2 != 0)
+			fds.flag = 3;
+		else if (i + 2 == ac - 2 && i % 2 == 0)
+			fds.flag = 4;
+		else if (i % 2 == 0)
+			fds.flag = 2;
+		else
+			fds.flag = 1;
+		new_process(av[i + 2], paths, envp, &fds);
+	}
+	/* while (++i < ac - 3)
+	{
+		if (i + 2 == ac - 2)
 			new_process2(av[i + 2], paths, envp, &fds);
 		else if (i == 0)
 			fds.flag = 0;
@@ -89,7 +103,7 @@ int	main(int ac, char **av, char **envp)
 		else
 			fds.flag = 2;
 		new_process1(av[i + 2], paths, envp, &fds);
-	}
+	} */
 	close(fds.in_fd);
 	close(fds.out_fd);
 	plug_pipe(fds.pipefd1);

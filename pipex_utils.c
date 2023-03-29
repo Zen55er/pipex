@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 13:55:02 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 11:34:43 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,20 @@ int	outfile_test(char *path)
 	return (0);
 }
 
-void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds)
+void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
+{
+	int		new_fork;
+
+	get_in_out(fds);
+	new_fork = fork();
+	if (new_fork < 0)
+		perror("Error when forking process");
+	else if (new_fork == 0)
+		child(cmd, paths, envp, fds);
+	return ;
+}
+
+/* void	new_process1(char *cmd, char **paths, char **envp, t_fds *fds)
 {
 	int		new_fork;
 	t_cmds	*cmds;
@@ -92,24 +105,20 @@ void	new_process2(char *cmd, char **paths, char **envp, t_fds *fds)
 		child(&cmds, envp, fds);
 	big_free(0, &cmds);
 	return ;
-}
+} */
 
-void	child(t_cmds **cmds, char **envp, t_fds *fds)
+void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 {
-	if (dup2((*fds).in, STDIN_FILENO) < 0 || dup2((*fds).out, STDOUT_FILENO) < 0)
-	{
-		big_free(0, cmds);
+	t_cmds	*cmds;
+
+	cmds = get_cmd(paths, cmd);
+	if (dup2((*fds).in, STDIN_FILENO) < 0
+		|| dup2((*fds).out, STDOUT_FILENO) < 0)
 		return ;
-	}
-	if ((*fds).in == (*fds).pipefd1[0])
-		close ((*fds).pipefd1[1]);
-	else if ((*fds).in == (*fds).pipefd2[0])
-		close ((*fds).pipefd2[1]);
-	if ((*fds).out == (*fds).pipefd1[1])
-		close ((*fds).pipefd1[0]);
-	else if ((*fds).out == (*fds).pipefd2[1])
-		close ((*fds).pipefd2[0]);
-	execve((*cmds)->cmd, (*cmds)->cmd_args, envp);
+	plug_pipe(fds->pipefd1);
+	plug_pipe(fds->pipefd2);
+	execve(cmds->cmd, cmds->cmd_args, envp);
 	ft_printf("execve failed.\n");
+	big_free(0, &cmds);
 	return ;
 }

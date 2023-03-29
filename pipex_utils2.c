@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/28 12:36:13 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 11:24:15 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,14 @@ void	get_in_out(t_fds *fds)
 		(*fds).in = (*fds).pipefd1[0];
 		(*fds).out = (*fds).pipefd2[1];
 	}
-	return ;
+	else if ((*fds).flag == 3)
+	{
+		(*fds).in = (*fds).pipefd2[0];
+		(*fds).out = (*fds).out_fd;
+	}
+	else if ((*fds).flag == 4)
+	{
+		(*fds).in = (*fds).pipefd1[0];
+		(*fds).out = (*fds).out_fd;
+	}
 }
