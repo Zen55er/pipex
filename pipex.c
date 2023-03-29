@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 14:12:07 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 14:28:38 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,12 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac != 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile.\n"));
-	if (infile_test(av[1]))
+	if (check_files(av[1], av[ac - 1]))
 		return (1);
-	if (outfile_test(av[4]))
-		return (2);
 	fds.in_fd = open(av[1], O_RDONLY);
 	fds.out_fd = open(av[ac - 1], O_RDWR | O_CREAT, 0644);
 	if (create_pipes(&fds))
-		return (3);
+		return (2);
 	paths = get_path(envp);
 	i = -1;
 	while (++i < ac - 3)
@@ -85,8 +83,7 @@ int	main(int ac, char **av, char **envp)
 	}
 	close(fds.in_fd);
 	close(fds.out_fd);
-	plug_pipe(fds.pipefd1);
-	plug_pipe(fds.pipefd2);
+	plug_pipes(fds.pipefd1, fds.pipefd2);
 	big_free(paths, 0);
 	return (0);
 }

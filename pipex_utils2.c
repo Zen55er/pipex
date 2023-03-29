@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 13:15:47 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 14:22:53 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ int	create_pipes(t_fds *fds)
 	return (0);
 }
 
-void	plug_pipe(int pipefd[2])
+void	plug_pipes(int pipefd1[2], int pipefd2[2])
 {
-	close(pipefd[0]);
-	close(pipefd[1]);
+	close(pipefd1[0]);
+	close(pipefd1[1]);
+	close(pipefd2[0]);
+	close(pipefd2[1]);
 	return ;
 }
 
