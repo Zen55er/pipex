@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 14:28:38 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 15:01:05 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_cmds	*get_cmd(char **paths, char *cmd)
 	while (paths[++i])
 	{
 		test = ft_strjoin(paths[i], cmds->cmd_args[0]);
-		if (!access(test, F_OK) && !cmds->cmd)
+		if (!access(test, F_OK & X_OK) && !cmds->cmd)
 			cmds->cmd = test;
 		else
 			free(test);

@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 14:34:08 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/29 15:03:59 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,13 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 	t_cmds	*cmds;
 
 	cmds = get_cmd(paths, cmd);
+	if (!cmds->cmd)
+	{
+		ft_printf("Command not found.\n");
+		big_free(0, &cmds);
+		plug_pipes(fds->pipefd1, fds->pipefd2);
+		return ;
+	}
 	if (dup2((*fds).in, STDIN_FILENO) < 0
 		|| dup2((*fds).out, STDOUT_FILENO) < 0)
 		return ;
