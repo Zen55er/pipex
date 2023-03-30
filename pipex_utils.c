@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/30 12:59:28 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/30 15:52:17 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	big_free(char **paths, t_cmds **cmds)
 	return (0);
 }
 
+/*Input and output file checks*/
 int	check_files(char *path1, char *path2)
 {
 	if (access(path1, F_OK))
@@ -43,10 +44,7 @@ int	check_files(char *path1, char *path2)
 	if (access(path1, R_OK))
 		return (ft_printf("Infile can't be read.\n"));
 	if (access(path2, F_OK))
-	{
-		//ft_printf("Outfile couldn't be accessed. File was created.\n");
 		return (0);
-	}
 	if (access(path2, R_OK))
 		return (ft_printf("Outfile can't be read.\n"));
 	if (access(path2, W_OK))
@@ -54,6 +52,7 @@ int	check_files(char *path1, char *path2)
 	return (0);
 }
 
+/*Creates fork and executes process*/
 void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 {
 	int		new_fork;
@@ -67,6 +66,7 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 	return ;
 }
 
+/*Duplicates fd's and executes command*/
 void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 {
 	t_cmds	*cmds;
@@ -82,7 +82,6 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 	if (dup2((*fds).in, STDIN_FILENO) < 0
 		|| dup2((*fds).out, STDOUT_FILENO) < 0)
 	{
-		perror("dup2 failed");
 		big_free(0, &cmds);
 		plug_pipes(fds->pipefd1, fds->pipefd2);
 		return ;

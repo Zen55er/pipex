@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/30 14:03:53 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/30 15:50:17 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	**get_path(char **envp)
 	return (paths);
 }
 
+/*Checks if the given command is in PATH*/
 int	check_path(char **paths, char *cmd)
 {
 	int	i;

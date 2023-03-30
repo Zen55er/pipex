@@ -6,12 +6,13 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 14:22:53 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/30 15:53:37 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+/*Creates both pipes*/
 int	create_pipes(t_fds *fds)
 {
 	if (pipe((*fds).pipefd1) == -1)
@@ -21,6 +22,7 @@ int	create_pipes(t_fds *fds)
 	return (0);
 }
 
+/*Closes used pipes*/
 void	plug_pipes(int pipefd1[2], int pipefd2[2])
 {
 	close(pipefd1[0]);
@@ -30,6 +32,7 @@ void	plug_pipes(int pipefd1[2], int pipefd2[2])
 	return ;
 }
 
+/*Selects appropriate case to send to new_process*/
 void	get_flag(int i, int ac, t_fds *fds)
 {
 	if (i == 0)
@@ -45,6 +48,7 @@ void	get_flag(int i, int ac, t_fds *fds)
 	return ;
 }
 
+/*Updates input and output fd's according to case*/
 void	get_in_out(t_fds *fds)
 {
 	if ((*fds).flag == 0)
