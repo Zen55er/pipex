@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/29 15:03:59 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/30 10:31:44 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,15 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 	}
 	if (dup2((*fds).in, STDIN_FILENO) < 0
 		|| dup2((*fds).out, STDOUT_FILENO) < 0)
+	{
+		perror("dup2 failed");
+		big_free(0, &cmds);
+		plug_pipes(fds->pipefd1, fds->pipefd2);
 		return ;
+	}
 	plug_pipes(fds->pipefd1, fds->pipefd2);
 	execve(cmds->cmd, cmds->cmd_args, envp);
-	ft_printf("execve failed.\n");
+	perror("execve failed.\n");
 	big_free(0, &cmds);
 	return ;
 }
