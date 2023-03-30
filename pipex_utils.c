@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/30 10:31:44 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/30 12:59:28 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	check_files(char *path1, char *path2)
 		return (ft_printf("Infile can't be read.\n"));
 	if (access(path2, F_OK))
 	{
-		ft_printf("Outfile couldn't be accessed. File was created.\n");
+		//ft_printf("Outfile couldn't be accessed. File was created.\n");
 		return (0);
 	}
 	if (access(path2, R_OK))
