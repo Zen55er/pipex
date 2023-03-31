@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/31 09:26:07 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/31 11:12:58 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	check_files(char *path1, char *path2)
 /*Creates fork and executes process*/
 void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 {
-	int		new_fork;
+	int	new_fork;
 
 	get_in_out(fds);
 	new_fork = fork();

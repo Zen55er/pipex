@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/31 09:58:42 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/31 10:59:20 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void	get_flag(int i, int ac, t_fds *fds)
 	else if (i + 2 == ac - 2 && i % 2 != 0)
 		(*fds).flag = 4;
 	else if (i % 2 == 0)
-		(*fds).flag = 1;
-	else
 		(*fds).flag = 2;
+	else
+		(*fds).flag = 1;
 	return ;
 }
 
@@ -58,13 +58,13 @@ void	get_in_out(t_fds *fds)
 	}
 	else if ((*fds).flag == 1)
 	{
-		(*fds).in = (*fds).pipefd2[0];
-		(*fds).out = (*fds).pipefd1[1];
+		(*fds).in = (*fds).pipefd1[0];
+		(*fds).out = (*fds).pipefd2[1];
 	}
 	else if ((*fds).flag == 2)
 	{
-		(*fds).in = (*fds).pipefd1[0];
-		(*fds).out = (*fds).pipefd2[1];
+		(*fds).in = (*fds).pipefd2[0];
+		(*fds).out = (*fds).pipefd1[1];
 	}
 	else if ((*fds).flag == 3)
 	{
