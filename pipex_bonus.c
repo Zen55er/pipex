@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:16 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/31 10:54:31 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/03/31 14:34:53 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	main(int ac, char **av, char **envp)
 	char	**paths;
 	int		i;
 
-	if (ac <= 5)
+	if (ac < 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 ... cmdn outfile.\n"));
 	if (check_files(av[1], av[ac - 1]))
 		return (1);
