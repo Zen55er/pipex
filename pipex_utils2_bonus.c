@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/04 11:14:50 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/04 12:18:42 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,8 @@ void	get_flag(int i, int ac, t_fds *fds)
 {
 	if (i == 0)
 		(*fds).flag = 0;
-	else if (i + 2 == ac - 2 /* && i % 2 == 0 */)
-		(*fds).flag = 3;
-	/* else if (i + 2 == ac - 2 && i % 2 != 0)
-		(*fds).flag = 4; */
-	/* else if (i % 2 == 0)
-		(*fds).flag = 2; */
+	else if (i + 2 == ac - 2)
+		(*fds).flag = 2;
 	else
 		(*fds).flag = 1;
 	return ;
@@ -80,19 +76,9 @@ void	get_in_out(t_fds *fds)
 		(*fds).in = (*fds).pipefd[fds->i_pipe - 1][0];
 		(*fds).out = (*fds).pipefd[fds->i_pipe][1];
 	}
-	/* else if ((*fds).flag == 2)
-	{
-		(*fds).in = (*fds).pipefd2[0];
-		(*fds).out = (*fds).pipefd1[1];
-	} */
-	else if ((*fds).flag == 3)
+	else if ((*fds).flag == 2)
 	{
 		(*fds).in = (*fds).pipefd[fds->i_pipe - 1][0];
 		(*fds).out = (*fds).out_fd;
 	}
-	/* else if ((*fds).flag == 4)
-	{
-		(*fds).in = (*fds).pipefd1[0];
-		(*fds).out = (*fds).out_fd;
-	} */
 }
