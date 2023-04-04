@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:43 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/03 12:50:28 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/04 12:27:38 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,19 @@ typedef struct s_fds
 	int		flag;
 }			t_fds;
 
-/*pipex.c*/
+/*pipex_bonus.c*/
 char	**get_path(char **envp);
 int		check_path(char **paths, char *cmd);
 t_cmds	*get_cmd(char **paths, char *cmd);
 
-/*pipex_utils*/
+/*pipex_utils_bonus*/
 void	free_double(void **array);
 int		big_free(char **paths, t_cmds **cmds, int **pipefd);
 int		check_files(char *path1, char *path2);
 void	new_process(char *cmd, char **paths, char **envp, t_fds *fds);
 void	child(char *cmd, char **paths, char **envp, t_fds *fds);
 
-/*pipex_utils2*/
+/*pipex_utils2_bonus*/
 int		create_pipes(t_fds *fds, int ac);
 void	plug_pipes(t_fds *fds);
 void	get_flag(int i, int ac, t_fds *fds);

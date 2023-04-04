@@ -6,24 +6,31 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/30 15:52:17 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/04 12:34:12 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+/*Frees double pointer*/
+void	free_double(void **array)
+{
+	int	i;
+
+	i = -1;
+	while (array [++i])
+		free (array [i]);
+	free (array);
+	return ;
+}
+
 /*Frees everything*/
-int	big_free(char **paths, t_cmds **cmds)
+int	big_free(char **paths, t_cmds **cmds, int **pipefd)
 {
 	int	i;
 
 	if (paths)
-	{
-		i = -1;
-		while (paths[++i])
-			free (paths[i]);
-		free (paths);
-	}
+		free_double((void *)paths);
 	if (cmds)
 	{
 		i = -1;
@@ -33,6 +40,8 @@ int	big_free(char **paths, t_cmds **cmds)
 		free ((*cmds)->cmd);
 		free((*cmds));
 	}
+	if (pipefd)
+		free_double((void *)pipefd);
 	return (0);
 }
 
@@ -74,21 +83,20 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 	cmds = get_cmd(paths, cmd);
 	if (!cmds->cmd)
 	{
-		ft_printf("Command not found.\n");
-		big_free(0, &cmds);
-		plug_pipes(fds->pipefd1, fds->pipefd2);
+		ft_printf("Command not found: %s.\n", cmd);
+		big_free(0, &cmds, 0);
+		close(fds->pipefd[fds->i_pipe][0]);
 		return ;
 	}
 	if (dup2((*fds).in, STDIN_FILENO) < 0
 		|| dup2((*fds).out, STDOUT_FILENO) < 0)
 	{
-		big_free(0, &cmds);
-		plug_pipes(fds->pipefd1, fds->pipefd2);
+		big_free(0, &cmds, 0);
 		return ;
 	}
-	plug_pipes(fds->pipefd1, fds->pipefd2);
+	plug_pipes(fds);
 	execve(cmds->cmd, cmds->cmd_args, envp);
 	perror("execve failed.\n");
-	big_free(0, &cmds);
+	big_free(0, &cmds, fds->pipefd);
 	return ;
 }
