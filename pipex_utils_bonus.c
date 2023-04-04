@@ -6,24 +6,31 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/03/31 13:46:27 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/03 13:00:37 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
+/*Frees double pointer*/
+void	free_double(void **array)
+{
+	int	i;
+
+	i = -1;
+	while (array [++i])
+		free (array [i]);
+	free (array);
+	return ;
+}
+
 /*Frees everything*/
-int	big_free(char **paths, t_cmds **cmds)
+int	big_free(char **paths, t_cmds **cmds, int **pipefd)
 {
 	int	i;
 
 	if (paths)
-	{
-		i = -1;
-		while (paths[++i])
-			free (paths[i]);
-		free (paths);
-	}
+		free_double((void *)paths);
 	if (cmds)
 	{
 		i = -1;
@@ -33,6 +40,8 @@ int	big_free(char **paths, t_cmds **cmds)
 		free ((*cmds)->cmd);
 		free((*cmds));
 	}
+	if (pipefd)
+		free_double((void *)pipefd);
 	return (0);
 }
 
@@ -63,6 +72,7 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 		perror("Error when forking process");
 	else if (new_fork == 0)
 		child(cmd, paths, envp, fds);
+	fds->i_pipe++;
 	return ;
 }
 
@@ -75,20 +85,20 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 	if (!cmds->cmd)
 	{
 		ft_printf("Command not found.\n");
-		big_free(0, &cmds);
-		plug_pipes(fds->pipefd1, fds->pipefd2);
+		big_free(0, &cmds, fds->pipefd);
+		plug_pipes(fds);
 		return ;
 	}
 	if (dup2((*fds).in, STDIN_FILENO) < 0
 		|| dup2((*fds).out, STDOUT_FILENO) < 0)
 	{
-		big_free(0, &cmds);
-		plug_pipes(fds->pipefd1, fds->pipefd2);
+		big_free(0, &cmds, fds->pipefd);
+		plug_pipes(fds);
 		return ;
 	}
-	plug_pipes(fds->pipefd1, fds->pipefd2);
+	plug_pipes(fds);
 	execve(cmds->cmd, cmds->cmd_args, envp);
 	perror("execve failed.\n");
-	big_free(0, &cmds);
+	big_free(0, &cmds, fds->pipefd);
 	return ;
 }

@@ -1,5 +1,12 @@
 Test file to read.
 The quick brown fox jumps over the lazy dog.
-Line 3
-fox
+quick brown fox jumps over the lazy dog.
+brown fox jumps over the lazy dog.
+fox jumps over the lazy dog.
+jumps over the lazy dog.
+over the lazy dog.
+the lazy dog.
+lazy dog.
+dog.
+.
 END
