@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 10:53:30 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/04 12:31:06 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/05 11:47:27 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_fds
 /*pipex.c*/
 char	**get_path(char **envp);
 int		check_path(char **paths, char *cmd);
+void	awk_cmd(t_cmds **cmds, char *cmd);
 t_cmds	*get_cmd(char **paths, char *cmd);
 
 /*pipex_utils*/

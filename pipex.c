@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:58:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/04 12:32:41 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/05 14:19:59 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,30 @@ int	check_path(char **paths, char *cmd)
 	return (0);
 }
 
+/*Special case for awk calls*/
+void	awk_cmd(t_cmds **cmds, char *cmd)
+{
+	int	i;
+	int	j;
+
+	(*cmds)->cmd_args = (char **)malloc(sizeof(char *) * 3);
+	(*cmds)->cmd_args[0] = ft_substr(cmd, 0, 3);
+	i = 3;
+	while (cmd[i] == ' ')
+		i++;
+	if (cmd[i] == 39)
+		i++;
+	j = 0;
+	while (cmd[j + i] && cmd [j + i] != 39)
+		j++;
+	if (j)
+		(*cmds)->cmd_args[1] = ft_substr(&cmd[i], 0, j);
+	/* else
+		(*cmds)->cmd_args[1] = ft_strdup(&cmd[i]); */
+	(*cmds)->cmd_args[2] = 0;
+	return ;
+}
+
 /*Fixes path to have the command at the end and splits args if there are any*/
 t_cmds	*get_cmd(char **paths, char *cmd)
 {
@@ -61,7 +85,10 @@ t_cmds	*get_cmd(char **paths, char *cmd)
 		cmd = ft_strrchr(cmd, '/');
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd = 0;
-	cmds->cmd_args = ft_split(cmd, ' ');
+	if (ft_strncmp(cmd, "awk ", 4) == 0)
+		awk_cmd(&cmds, cmd);
+	else
+		cmds->cmd_args = ft_split(cmd, ' ');
 	i = -1;
 	while (paths[++i])
 	{
