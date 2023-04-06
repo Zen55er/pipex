@@ -50,28 +50,94 @@ int	check_path(char **paths, char *cmd)
 	return (0);
 }
 
-/*Special case for awk calls*/
-void	awk_cmd(t_cmds **cmds, char *cmd)
+/*Checks for correct usage of quotes. 34 = " 39 = ', 92 = \*/
+/* int	fix_awk_quotes(char *cmd, int *i)
+{
+	int	len;
+
+	len = ft_strlen(cmd);
+	if (cmd[*i] == 34 && cmd[*i + 1] == 39)
+		return (0);
+	if (cmd[*i] == 39)
+	{
+		ft_printf("%c\n", cmd[len - 1]);
+		if (cmd[len - 1] == 39)
+			*i += 1;
+		else
+			return (0);
+	}
+	if (cmd[*i] == 34)
+	{
+		if ((cmd[*i - 1] == ' ' && cmd[len - 1] == 34) || cmd[len - 2] == 34)
+			*i += 1;
+		else
+			return (0);
+	}
+	if (cmd[*i] == 39 && cmd[*i + 1] == 34)
+		return (ft_strlen(&cmd[*i]) - 2);
+	else
+		return (ft_strlen(&cmd[*i]) - 1);
+} */
+
+int	single_awk(char *cmd, char c, int *i)
+{
+	int	len;
+
+	*i += 1;
+	len = ft_strlen(cmd + 1);
+	if (cmd[len] == c)
+		return (len - 1);
+	return (0);
+}
+
+int	double_awk(char *cmd, int *i)
+{
+	int	len;
+
+	*i += 2;
+	len = ft_strlen(cmd + 2);
+	if (cmd[len] == 34 && cmd[len + 1] == 39)
+		return (len - 2);
+	return (0);
+}
+
+int	awk_cases(char *cmd, int *i)
+{
+	int	j;
+
+	if ((cmd[*i] == 39 || cmd[*i] == 34) && cmd[*i + 1] > 39)
+		j = single_awk(&cmd[*i], cmd[*i], i);
+	else if (cmd[*i] == 39 && cmd[*i + 1] == 34)
+		j = double_awk(&cmd[*i], i);
+	else if (cmd[*i] == 34 && cmd[*i + 1] == 39)
+		j = 0;
+	return (j);
+}
+
+/*Special case for awk calls.*/
+int	awk_cmd(t_cmds **cmds, char *cmd)
 {
 	int	i;
 	int	j;
 
-	(*cmds)->cmd_args = (char **)malloc(sizeof(char *) * 3);
-	(*cmds)->cmd_args[0] = ft_substr(cmd, 0, 3);
 	i = 3;
+	j = 0;
 	while (cmd[i] == ' ')
 		i++;
-	if (cmd[i] == 39)
-		i++;
-	j = 0;
-	while (cmd[j + i] && cmd [j + i] != 39)
-		j++;
+	if (cmd[i] == 34 || cmd[i] == 39)
+	{
+		j = awk_cases(cmd, &i);
+		if (j == 0)
+			return (1);
+	}
+	(*cmds)->cmd_args = (char **)malloc(sizeof(char *) * 3);
+	(*cmds)->cmd_args[0] = ft_substr(cmd, 0, 3);
 	if (j)
 		(*cmds)->cmd_args[1] = ft_substr(&cmd[i], 0, j);
-	/* else
-		(*cmds)->cmd_args[1] = ft_strdup(&cmd[i]); */
+	else
+		(*cmds)->cmd_args[1] = ft_strdup(&cmd[i]);
 	(*cmds)->cmd_args[2] = 0;
-	return ;
+	return (0);
 }
 
 /*Fixes path to have the command at the end and splits args if there are any*/
@@ -86,7 +152,10 @@ t_cmds	*get_cmd(char **paths, char *cmd)
 	cmds = (t_cmds *)malloc(sizeof(t_cmds));
 	cmds->cmd = 0;
 	if (ft_strncmp(cmd, "awk ", 4) == 0)
-		awk_cmd(&cmds, cmd);
+	{
+		if (awk_cmd(&cmds, cmd))
+			return (cmds);
+	}
 	else
 		cmds->cmd_args = ft_split(cmd, ' ');
 	i = -1;
