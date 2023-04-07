@@ -50,35 +50,6 @@ int	check_path(char **paths, char *cmd)
 	return (0);
 }
 
-/*Checks for correct usage of quotes. 34 = " 39 = ', 92 = \*/
-/* int	fix_awk_quotes(char *cmd, int *i)
-{
-	int	len;
-
-	len = ft_strlen(cmd);
-	if (cmd[*i] == 34 && cmd[*i + 1] == 39)
-		return (0);
-	if (cmd[*i] == 39)
-	{
-		ft_printf("%c\n", cmd[len - 1]);
-		if (cmd[len - 1] == 39)
-			*i += 1;
-		else
-			return (0);
-	}
-	if (cmd[*i] == 34)
-	{
-		if ((cmd[*i - 1] == ' ' && cmd[len - 1] == 34) || cmd[len - 2] == 34)
-			*i += 1;
-		else
-			return (0);
-	}
-	if (cmd[*i] == 39 && cmd[*i + 1] == 34)
-		return (ft_strlen(&cmd[*i]) - 2);
-	else
-		return (ft_strlen(&cmd[*i]) - 1);
-} */
-
 int	single_awk(char *cmd, char c, int *i)
 {
 	int	len;
@@ -90,25 +61,13 @@ int	single_awk(char *cmd, char c, int *i)
 	return (0);
 }
 
-/* int	double_awk(char *cmd, int *i)
-{
-	int	len;
-
-	*i += 2;
-	len = ft_strlen(cmd + 2);
-	if (cmd[len] == 34 && cmd[len + 1] == 39)
-		return (len - 2);
-	return (0);
-} */
-
+/*Checks for correct usage of quotes. 34 = " 39 = ', 92 = \*/
 int	awk_cases(char *cmd, int *i)
 {
 	int	j;
 
-	if ((cmd[*i] == 39 || cmd[*i] == 34) /* && cmd[*i + 1] > 39 */)
+	if ((cmd[*i] == 39 || cmd[*i] == 34))
 		j = single_awk(&cmd[*i], cmd[*i], i);
-	/* else if (cmd[*i] == 39 && cmd[*i + 1] == 34)
-		j = double_awk(&cmd[*i], i); */
 	else if (cmd[*i] == 34 && cmd[*i + 1] == 39)
 		j = 0;
 	return (j);
@@ -181,7 +140,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac != 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 cmd2 outfile.\n"));
 	if (check_files(av[1], av[ac - 1]))
-		return (1);
+		return (0);
 	fds.in_fd = open(av[1], O_RDONLY);
 	fds.out_fd = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (create_pipes(&fds, ac))
