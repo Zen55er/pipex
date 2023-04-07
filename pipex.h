@@ -40,7 +40,7 @@ char	**get_path(char **envp);
 int		check_path(char **paths, char *cmd);
 //int		fix_awk_quotes(char *cmd, int *i);
 int		single_awk(char *cmd, char c, int *i);
-int		double_awk(char *cmd, int *i);
+//int		double_awk(char *cmd, int *i);
 int		awk_cases(char *cmd, int *i);
 int		awk_cmd(t_cmds **cmds, char *cmd);
 t_cmds	*get_cmd(char **paths, char *cmd);

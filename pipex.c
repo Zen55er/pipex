@@ -90,7 +90,7 @@ int	single_awk(char *cmd, char c, int *i)
 	return (0);
 }
 
-int	double_awk(char *cmd, int *i)
+/* int	double_awk(char *cmd, int *i)
 {
 	int	len;
 
@@ -99,16 +99,16 @@ int	double_awk(char *cmd, int *i)
 	if (cmd[len] == 34 && cmd[len + 1] == 39)
 		return (len - 2);
 	return (0);
-}
+} */
 
 int	awk_cases(char *cmd, int *i)
 {
 	int	j;
 
-	if ((cmd[*i] == 39 || cmd[*i] == 34) && cmd[*i + 1] > 39)
+	if ((cmd[*i] == 39 || cmd[*i] == 34) /* && cmd[*i + 1] > 39 */)
 		j = single_awk(&cmd[*i], cmd[*i], i);
-	else if (cmd[*i] == 39 && cmd[*i + 1] == 34)
-		j = double_awk(&cmd[*i], i);
+	/* else if (cmd[*i] == 39 && cmd[*i + 1] == 34)
+		j = double_awk(&cmd[*i], i); */
 	else if (cmd[*i] == 34 && cmd[*i + 1] == 39)
 		j = 0;
 	return (j);
