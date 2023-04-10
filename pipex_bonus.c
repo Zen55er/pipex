@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:16 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/04 11:09:09 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/10 10:05:09 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,32 +48,6 @@ int	check_path(char **paths, char *cmd)
 			return (1);
 	}
 	return (0);
-}
-
-/*Fixes path to have the command at the end and splits args if there are any*/
-t_cmds	*get_cmd(char **paths, char *cmd)
-{
-	t_cmds	*cmds;
-	char	*test;
-	int		i;
-
-	if (cmd[0] == '/' && check_path(paths, cmd))
-		cmd = ft_strrchr(cmd, '/');
-	cmds = (t_cmds *)malloc(sizeof(t_cmds));
-	cmds->cmd = 0;
-	cmds->cmd_args = ft_split(cmd, ' ');
-	i = -1;
-	while (paths[++i])
-	{
-		test = ft_strjoin(paths[i], cmds->cmd_args[0]);
-		if (!access(test, F_OK & X_OK) && !cmds->cmd)
-			cmds->cmd = test;
-		else
-			free(test);
-		if (cmds->cmd)
-			break ;
-	}
-	return (cmds);
 }
 
 int	main(int ac, char **av, char **envp)

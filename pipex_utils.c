@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/04 12:34:12 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/10 12:11:02 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 	int		new_fork;
 
 	get_in_out(fds);
-	if (fds->in == -1)
-		fds->in = 0;
+	if (fds->in == -1 && fds->flag == 0)
+		return ;
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");

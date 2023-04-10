@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/04 12:41:33 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/10 12:59:10 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	create_pipes(t_fds *fds, int ac)
 			return (big_free(0, 0, fds->pipefd));
 		if (pipe(fds->pipefd[i]) == -1)
 		{
-			ft_printf("Piping failed.\n");
+			perror("Piping failed");
 			return (big_free(0, 0, fds->pipefd));
 		}
 	}

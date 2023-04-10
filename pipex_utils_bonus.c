@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/04 12:34:18 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/10 12:09:36 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,15 @@ int	big_free(char **paths, t_cmds **cmds, int **pipefd)
 /*Input and output file checks*/
 int	check_files(char *path1, char *path2)
 {
-	if (access(path1, F_OK))
-		return (ft_printf("Infile can't be accessed.\n"));
-	if (access(path1, R_OK))
-		return (ft_printf("Infile can't be read.\n"));
+	if (access(path1, F_OK | R_OK))
+		perror("pipex: input");
 	if (access(path2, F_OK))
 		return (0);
-	if (access(path2, R_OK))
-		return (ft_printf("Outfile can't be read.\n"));
-	if (access(path2, W_OK))
-		return (ft_printf("Outfile can't be written.\n"));
+	if (access(path2, R_OK | W_OK))
+	{
+		perror("pipex: input");
+		return (1);
+	}
 	return (0);
 }
 
@@ -67,6 +66,11 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 	int	new_fork;
 
 	get_in_out(fds);
+	if (fds->in == -1 && fds->flag == 0)
+	{
+		fds->i_pipe++;
+		return ;
+	}
 	new_fork = fork();
 	if (new_fork < 0)
 		perror("Error when forking process");
@@ -86,7 +90,8 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 	{
 		ft_printf("Command not found: %s.\n", cmd);
 		big_free(0, &cmds, 0);
-		close(fds->pipefd[fds->i_pipe][0]);
+		if (fds->i_pipe <= fds->pipes - 1)
+			close(fds->pipefd[fds->i_pipe][0]);
 		return ;
 	}
 	if (dup2((*fds).in, STDIN_FILENO) < 0

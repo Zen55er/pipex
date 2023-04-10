@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 10:53:30 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/05 11:47:27 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/10 09:51:13 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,6 @@ typedef struct s_fds
 /*pipex.c*/
 char	**get_path(char **envp);
 int		check_path(char **paths, char *cmd);
-int		single_awk(char *cmd, char c, int *i);
-int		awk_cases(char *cmd, int *i);
-int		awk_cmd(t_cmds **cmds, char *cmd);
-t_cmds	*get_cmd(char **paths, char *cmd);
 
 /*pipex_utils*/
 void	free_double(void **array);
@@ -55,5 +51,11 @@ int		create_pipes(t_fds *fds, int ac);
 void	plug_pipes(t_fds *fds);
 void	get_flag(int i, int ac, t_fds *fds);
 void	get_in_out(t_fds *fds);
+
+/*pipex_utils3*/
+int		awk_quotes(char *cmd, char c, int *i);
+int		awk_cmd(t_cmds **cmds, char *cmd);
+void	test_cmd(char **paths, t_cmds **cmds);
+t_cmds	*get_cmd(char **paths, char *cmd);
 
 #endif
