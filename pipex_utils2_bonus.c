@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/10 12:59:10 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/12 09:45:13 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	create_pipes(t_fds *fds, int ac)
 		}
 	}
 	fds->pipefd[i] = 0;
+	fds->fake = 0;
 	return (0);
 }
 

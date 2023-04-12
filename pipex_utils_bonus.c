@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/10 12:09:36 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/12 09:51:59 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
 	int	new_fork;
 
 	get_in_out(fds);
-	if (fds->in == -1 && fds->flag == 0)
+	if (fds->in == -1 || fds->fake == 1)
 	{
 		fds->i_pipe++;
 		return ;
@@ -92,6 +92,7 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 		big_free(0, &cmds, 0);
 		if (fds->i_pipe <= fds->pipes - 1)
 			close(fds->pipefd[fds->i_pipe][0]);
+		fds->fake = 1;
 		return ;
 	}
 	if (dup2((*fds).in, STDIN_FILENO) < 0

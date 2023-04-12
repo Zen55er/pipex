@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:43 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/10 10:25:44 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/12 09:43:40 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_fds
 	int		in;
 	int		out;
 	int		flag;
+	int		fake;
 }			t_fds;
 
 /*pipex.c*/
