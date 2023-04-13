@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 09:52:48 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 11:12:59 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_double(void **array)
 }
 
 /*Frees everything*/
-int	big_free(char **paths, t_cmds **cmds, int **pipefd, t_fds fds)
+int	big_free(char **paths, t_cmds **cmds, int **pipefd, t_fds *fds)
 {
 	int	i;
 
@@ -42,8 +42,8 @@ int	big_free(char **paths, t_cmds **cmds, int **pipefd, t_fds fds)
 	}
 	if (pipefd)
 		free_double((void *)pipefd);
-	if (fds.here_doc)
-		unlink(".heredoc");
+	if (fds && fds->here_doc)
+		unlink(".here_doc");
 	return (0);
 }
 
@@ -95,7 +95,7 @@ int	here_doc(char *limiter, t_fds *fds)
 	fds->here_doc_fd = open(".here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	while (1)
 	{
-		write(STDOUT_FILENO, "here_doc-> ", 11);
+		write(STDOUT_FILENO, "pipe heredoc> ", 14);
 		temp = get_next_line(STDIN_FILENO);
 		if (!ft_strncmp(temp, limiter, ft_strlen(limiter)))
 			break ;

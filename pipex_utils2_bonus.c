@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 09:30:03 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 10:43:16 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ int	create_pipes(t_fds *fds, int ac)
 	{
 		fds->pipefd[i] = (int *)malloc(sizeof(int) * 2);
 		if (!fds->pipefd[i])
-			return (big_free(0, 0, fds->pipefd, *fds));
+			return (big_free(0, 0, fds->pipefd, 0));
 		if (pipe(fds->pipefd[i]) == -1)
 		{
 			perror("Piping failed");
-			return (big_free(0, 0, fds->pipefd, *fds));
+			return (big_free(0, 0, fds->pipefd, 0));
 		}
 	}
 	fds->pipefd[i] = 0;
