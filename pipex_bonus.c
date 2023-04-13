@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:16 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/12 09:44:00 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 09:53:15 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,54 @@ int	check_path(char **paths, char *cmd)
 	return (0);
 }
 
+/*Creates fork and executes process*/
+void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
+{
+	int	new_fork;
+
+	get_in_out(fds);
+	if (fds->in == -1 || fds->fake == 1)
+	{
+		fds->i_pipe++;
+		return ;
+	}
+	new_fork = fork();
+	if (new_fork < 0)
+		perror("Error when forking process");
+	else if (new_fork == 0)
+		child(cmd, paths, envp, fds);
+	fds->i_pipe++;
+	return ;
+}
+
+/*Duplicates fd's and executes command*/
+void	child(char *cmd, char **paths, char **envp, t_fds *fds)
+{
+	t_cmds	*cmds;
+
+	cmds = get_cmd(paths, cmd);
+	if (!cmds->cmd)
+	{
+		ft_printf("Command not found: %s.\n", cmd);
+		big_free(0, &cmds, 0, *fds);
+		if (fds->i_pipe <= fds->pipes - 1)
+			close(fds->pipefd[fds->i_pipe][0]);
+		fds->fake = 1;
+		return ;
+	}
+	if (dup2((*fds).in, STDIN_FILENO) < 0
+		|| dup2((*fds).out, STDOUT_FILENO) < 0)
+	{
+		big_free(0, &cmds, 0, *fds);
+		return ;
+	}
+	plug_pipes(fds);
+	execve(cmds->cmd, cmds->cmd_args, envp);
+	perror("execve failed.\n");
+	big_free(0, &cmds, fds->pipefd, *fds);
+	return ;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_fds	fds;
@@ -58,14 +106,13 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac < 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 ... cmdn outfile.\n"));
-	if (check_files(av[1], av[ac - 1]))
+	if (!ft_strncmp(av[1], "here_doc", 8))
+		here_doc(av[2], &fds);
+	if (check_files(&fds, ac, av))
 		return (1);
-	fds.in_fd = open(av[1], O_RDONLY);
-	fds.out_fd = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (create_pipes(&fds, ac))
 		return (2);
 	paths = get_path(envp);
-	fds.i_pipe = 0;
 	i = -1;
 	while (++i < ac - 3)
 	{
@@ -75,6 +122,6 @@ int	main(int ac, char **av, char **envp)
 	close(fds.in_fd);
 	close(fds.out_fd);
 	plug_pipes(&fds);
-	big_free(paths, 0, fds.pipefd);
+	big_free(paths, 0, fds.pipefd, fds);
 	return (0);
 }

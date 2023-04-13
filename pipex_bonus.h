@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:43 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/12 09:43:40 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 09:52:35 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,22 @@ typedef struct s_fds
 	int		out;
 	int		flag;
 	int		fake;
+	int		here_doc;
+	int		here_doc_fd;
 }			t_fds;
 
 /*pipex.c*/
 char	**get_path(char **envp);
 int		check_path(char **paths, char *cmd);
+void	new_process(char *cmd, char **paths, char **envp, t_fds *fds);
+void	child(char *cmd, char **paths, char **envp, t_fds *fds);
 
 /*pipex_utils*/
 void	free_double(void **array);
-int		big_free(char **paths, t_cmds **cmds, int **pipefd);
-int		check_files(char *path1, char *path2);
-void	new_process(char *cmd, char **paths, char **envp, t_fds *fds);
-void	child(char *cmd, char **paths, char **envp, t_fds *fds);
+int		big_free(char **paths, t_cmds **cmds, int **pipefd, t_fds fds);
+void	get_outfile(t_fds *fds, int ac, char **av);
+int		check_files(t_fds *fds, int ac, char **av);
+int		here_doc(char *limiter, t_fds *fds);
 
 /*pipex_utils2*/
 int		create_pipes(t_fds *fds, int ac);

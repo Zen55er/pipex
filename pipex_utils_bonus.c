@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/12 09:51:59 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 09:52:48 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_double(void **array)
 }
 
 /*Frees everything*/
-int	big_free(char **paths, t_cmds **cmds, int **pipefd)
+int	big_free(char **paths, t_cmds **cmds, int **pipefd, t_fds fds)
 {
 	int	i;
 
@@ -42,68 +42,68 @@ int	big_free(char **paths, t_cmds **cmds, int **pipefd)
 	}
 	if (pipefd)
 		free_double((void *)pipefd);
+	if (fds.here_doc)
+		unlink(".heredoc");
 	return (0);
 }
 
-/*Input and output file checks*/
-int	check_files(char *path1, char *path2)
+/*Opens output file*/
+void	get_outfile(t_fds *fds, int ac, char **av)
 {
-	if (access(path1, F_OK | R_OK))
+	if (fds->here_doc)
+		fds->out_fd = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
+	else
+		fds->out_fd = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	return ;
+}
+
+/*Input and output file checks*/
+int	check_files(t_fds *fds, int ac, char **av)
+{
+	char	*input;
+
+	if (fds->here_doc)
+		input = ".here_doc";
+	else
+		input = av[1];
+	if (access(input, F_OK | R_OK))
 		perror("pipex: input");
-	if (access(path2, F_OK))
+	if (access(av[ac - 1], F_OK))
+	{
+		fds->in_fd = open(input, O_RDONLY);
+		get_outfile(fds, ac, av);
 		return (0);
-	if (access(path2, R_OK | W_OK))
+	}
+	if (access(av[ac - 1], R_OK | W_OK))
 	{
 		perror("pipex: input");
 		return (1);
 	}
+	fds->in_fd = open(input, O_RDONLY);
+	get_outfile(fds, ac, av);
 	return (0);
 }
 
-/*Creates fork and executes process*/
-void	new_process(char *cmd, char **paths, char **envp, t_fds *fds)
+/*Handles here_doc cases*/
+int	here_doc(char *limiter, t_fds *fds)
 {
-	int	new_fork;
+	char	*temp;
 
-	get_in_out(fds);
-	if (fds->in == -1 || fds->fake == 1)
+	if (!limiter)
+		return (ft_printf("There is no limiter.\n"));
+	fds->here_doc = 1;
+	fds->here_doc_fd = open(".here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	while (1)
 	{
-		fds->i_pipe++;
-		return ;
+		write(STDOUT_FILENO, "here_doc-> ", 11);
+		temp = get_next_line(STDIN_FILENO);
+		if (!ft_strncmp(temp, limiter, ft_strlen(limiter)))
+			break ;
+		else
+			write(fds->here_doc_fd, temp, ft_strlen(temp));
+		free(temp);
 	}
-	new_fork = fork();
-	if (new_fork < 0)
-		perror("Error when forking process");
-	else if (new_fork == 0)
-		child(cmd, paths, envp, fds);
-	fds->i_pipe++;
-	return ;
-}
-
-/*Duplicates fd's and executes command*/
-void	child(char *cmd, char **paths, char **envp, t_fds *fds)
-{
-	t_cmds	*cmds;
-
-	cmds = get_cmd(paths, cmd);
-	if (!cmds->cmd)
-	{
-		ft_printf("Command not found: %s.\n", cmd);
-		big_free(0, &cmds, 0);
-		if (fds->i_pipe <= fds->pipes - 1)
-			close(fds->pipefd[fds->i_pipe][0]);
-		fds->fake = 1;
-		return ;
-	}
-	if (dup2((*fds).in, STDIN_FILENO) < 0
-		|| dup2((*fds).out, STDOUT_FILENO) < 0)
-	{
-		big_free(0, &cmds, 0);
-		return ;
-	}
-	plug_pipes(fds);
-	execve(cmds->cmd, cmds->cmd_args, envp);
-	perror("execve failed.\n");
-	big_free(0, &cmds, fds->pipefd);
-	return ;
+	free(temp);
+	close(fds->here_doc_fd);
+	return (0);
 }

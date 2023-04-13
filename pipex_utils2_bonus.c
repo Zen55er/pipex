@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/12 09:45:13 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 09:30:03 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	create_pipes(t_fds *fds, int ac)
 {
 	int	i;
 
-	fds->pipes = ac - 4;
+	fds->pipes = ac - 4 - fds->here_doc;
 	fds->pipefd = (int **)malloc(sizeof(int *) * (fds->pipes + 1));
 	if (!fds->pipefd)
 		return (1);
@@ -26,15 +26,16 @@ int	create_pipes(t_fds *fds, int ac)
 	{
 		fds->pipefd[i] = (int *)malloc(sizeof(int) * 2);
 		if (!fds->pipefd[i])
-			return (big_free(0, 0, fds->pipefd));
+			return (big_free(0, 0, fds->pipefd, *fds));
 		if (pipe(fds->pipefd[i]) == -1)
 		{
 			perror("Piping failed");
-			return (big_free(0, 0, fds->pipefd));
+			return (big_free(0, 0, fds->pipefd, *fds));
 		}
 	}
 	fds->pipefd[i] = 0;
 	fds->fake = 0;
+	fds->i_pipe = 0;
 	return (0);
 }
 
@@ -57,7 +58,7 @@ void	get_flag(int i, int ac, t_fds *fds)
 {
 	if (i == 0)
 		(*fds).flag = 0;
-	else if (i + 2 == ac - 2)
+	else if (i + 2 + fds->here_doc == ac - 2)
 		(*fds).flag = 2;
 	else
 		(*fds).flag = 1;
