@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:43 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 10:41:28 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:30:37 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	free_double(void **array);
 int		big_free(char **paths, t_cmds **cmds, int **pipefd, t_fds *fds);
 void	get_outfile(t_fds *fds, int ac, char **av);
 int		check_files(t_fds *fds, int ac, char **av);
-int		here_doc(char *limiter, t_fds *fds);
+int	here_doc(char **av, t_fds *fds);
 
 /*pipex_utils2*/
 int		create_pipes(t_fds *fds, int ac);

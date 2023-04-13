@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:16 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 11:00:49 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:26:43 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,7 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac < 5)
 		return (ft_printf("Usage: ./pipex infile cmd1 ... cmdn outfile.\n"));
-	if (!ft_strncmp(av[1], "here_doc", 8))
-		here_doc(av[2], &fds);
+	here_doc(av, &fds);
 	if (check_files(&fds, ac, av))
 		return (1);
 	if (create_pipes(&fds, ac))

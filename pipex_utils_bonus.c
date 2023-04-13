@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 11:12:59 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:41:44 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,19 +85,22 @@ int	check_files(t_fds *fds, int ac, char **av)
 }
 
 /*Handles here_doc cases*/
-int	here_doc(char *limiter, t_fds *fds)
+int	here_doc(char **av, t_fds *fds)
 {
 	char	*temp;
 
-	if (!limiter)
-		return (ft_printf("There is no limiter.\n"));
+	if (ft_strncmp(av[1], "here_doc", 8))
+	{
+		fds->here_doc = 0;
+		return (1);
+	}
 	fds->here_doc = 1;
 	fds->here_doc_fd = open(".here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	while (1)
 	{
 		write(STDOUT_FILENO, "pipe heredoc> ", 14);
 		temp = get_next_line(STDIN_FILENO);
-		if (!ft_strncmp(temp, limiter, ft_strlen(limiter)))
+		if (!ft_strncmp(temp, av[2], ft_strlen(av[2])))
 			break ;
 		else
 			write(fds->here_doc_fd, temp, ft_strlen(temp));
