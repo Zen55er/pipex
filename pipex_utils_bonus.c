@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 12:41:44 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/04/18 09:44:29 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ int	here_doc(char **av, t_fds *fds)
 	{
 		write(STDOUT_FILENO, "pipe heredoc> ", 14);
 		temp = get_next_line(STDIN_FILENO);
+		if (!temp)
+			return (0);
 		if (!ft_strncmp(temp, av[2], ft_strlen(av[2])))
 			break ;
 		else
