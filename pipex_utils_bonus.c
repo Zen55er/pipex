@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/06/19 10:28:36 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/06/19 12:26:40 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	here_doc(char **av, t_fds *fds)
 {
 	char	*temp;
 
-	if (ft_strncmp(av[1], "here_doc", 8))
+	if (ft_strncmp(av[1], "here_doc", 9))
 	{
 		fds->here_doc = 0;
 		return (1);
