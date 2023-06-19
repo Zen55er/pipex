@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 10:03:26 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 10:43:19 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:46:01 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,18 @@ t_cmds	*get_cmd(char **paths, char *cmd)
 		cmds->cmd_args = ft_split(cmd, ' ');
 	test_cmd(paths, &cmds);
 	return (cmds);
+}
+
+/*Waits for each child to end, closes files' fd's and remaining pipes*/
+void	big_wait(t_fds *fds)
+{
+	int		i;
+
+	i = -1;
+	while (++i < fds->i)
+		waitpid(fds->pids[i], 0, 0);
+	close(fds->in_fd);
+	close(fds->out_fd);
+	plug_pipes(&fds);
+	return ;
 }

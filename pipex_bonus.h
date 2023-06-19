@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:43 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/19 13:08:37 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/06/19 10:40:56 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef struct s_fds
 	int		out_fd;
 	int		pipes;
 	int		**pipefd;
+	pid_t	*pids;
+	int		i;
 	int		i_pipe;
 	int		in;
 	int		out;
@@ -56,11 +58,13 @@ int		create_pipes(t_fds *fds, int ac);
 void	plug_pipes(t_fds *fds);
 void	get_flag(int i, int ac, t_fds *fds);
 void	get_in_out(t_fds *fds);
+void	prep_pids(t_fds *fds);
 
 /*pipex_utils3*/
 int		awk_quotes(char *cmd, char c, int *i);
 int		awk_cmd(t_cmds **cmds, char *cmd);
 void	test_cmd(char **paths, t_cmds **cmds);
 t_cmds	*get_cmd(char **paths, char *cmd);
+void	big_wait(t_fds *fds);
 
 #endif

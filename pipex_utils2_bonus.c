@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 10:35:12 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/13 10:43:16 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:50:20 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	create_pipes(t_fds *fds, int ac)
 	fds->pipefd[i] = 0;
 	fds->fake = 0;
 	fds->i_pipe = 0;
+	fds->i = -1;
 	return (0);
 }
 
@@ -83,4 +84,13 @@ void	get_in_out(t_fds *fds)
 		(*fds).in = (*fds).pipefd[fds->i_pipe - 1][0];
 		(*fds).out = (*fds).out_fd;
 	}
+}
+
+void	prep_pids(t_fds *fds)
+{
+	int	total_pids;
+
+	total_pids = fds->pipes + 1;
+	fds->pids = (pid_t *)malloc(sizeof(pid_t) * total_pids);
+	return ;
 }

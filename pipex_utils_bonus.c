@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:15 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/04/20 09:27:52 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/06/19 10:28:36 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	big_free(char **paths, t_cmds **cmds, int **pipefd, t_fds *fds)
 		free_double((void *)pipefd);
 	if (fds && fds->here_doc)
 		unlink(".here_doc");
+	if (fds)
+		free(fds->pids);
 	return (0);
 }
 
