@@ -6,7 +6,7 @@
 /*   By: gacorrei <gacorrei@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 09:24:16 by gacorrei          #+#    #+#             */
-/*   Updated: 2023/06/19 11:50:35 by gacorrei         ###   ########.fr       */
+/*   Updated: 2023/07/04 08:57:25 by gacorrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,8 @@ void	child(char *cmd, char **paths, char **envp, t_fds *fds)
 	if (!cmds->cmd)
 	{
 		ft_printf("Command not found: '%s'\n", cmd);
+		plug_pipes(fds);
 		big_free(0, &cmds, 0, 0);
-		if (fds->i_pipe <= fds->pipes - 1)
-			close(fds->pipefd[fds->i_pipe][0]);
 		fds->fake = 1;
 		exit(1);
 	}
